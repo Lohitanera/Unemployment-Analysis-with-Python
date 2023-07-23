@@ -1,0 +1,61 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+unemployment = pd.read_csv("Unemployment in India.csv")
+unemployment.head()
+unemployment.tail()
+unemployment.sample()
+unemployment.dtypes
+unemployment.describe()
+unemployment.isnull().sum()
+unemployment.shape
+unemployment.dropna(axis = 0, inplace = True)
+unemployment.isnull().sum()
+unemployment.shape
+unemployment.columns
+unemployment.rename(columns={' Date':'Date',
+                         ' Frequency':'Frequency',
+                         ' Estimated Unemployment Rate (%)':'Estimated Unemployment Rate (%)',
+                        ' Estimated Employed':'Estimated Employed',
+                        ' Estimated Labour Participation Rate (%)':'Estimated Labour Participation Rate (%)'},inplace=True)
+unemployment.columns
+unemployment[unemployment.duplicated()]
+unemployment.duplicated().sum()
+unemployment['Date']=pd.to_datetime(unemployment['Date'])
+unemployment.dtypes
+#Creating day column from unemployment['Date']
+
+unemployment['day']=unemployment['Date'].dt.day
+#Creating month column from unemployment['Date']
+
+unemployment['month']=unemployment['Date'].dt.month_name()
+#Creating year column from unemployment['Date']
+
+unemployment['year']=unemployment['Date'].dt.year
+unemployment.head()
+#Analysing Data using Visualisation plots(graphs)
+unemployment.columns
+unemployment['Region'].unique()
+sns.countplot(x=unemployment['Area'],palette = "Set2")
+plt.show()
+sns.heatmap(unemployment[['Estimated Unemployment Rate (%)',
+                'Estimated Employed',
+                'Estimated Labour Participation Rate (%)']].corr(),
+            annot=True
+           )
+plt.show()
+unemployment.plot(kind="scatter", x='Estimated Unemployment Rate (%)', y='year')
+
+# for changing y_axis range from 2018 to 2022
+plt.ylim(2018,2022)
+plt.show()
+unemployment.plot(kind="scatter", x='Estimated Labour Participation Rate (%)', y='Region')
+px.scatter(data_frame=unemployment, x='Estimated Unemployment Rate (%)',
+           y='Region', animation_frame='year')
+unemployment1 = unemployment[["Region", 'Estimated Unemployment Rate (%)']]
+
+fig = px.sunburst(unemployment1, path=['Region'], values='Estimated Unemployment Rate (%)',
+                  title= 'Unemployment rate in every State in India', height=650)
+fig.show()
